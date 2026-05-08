@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DeepWork Pro</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --bg:#0b0c0e;
+  --surface:#16171b;
+  --surface2:#1d1f24;
+  --border:rgba(255,255,255,.08);
+  --text:#ece8f4;
+  --muted:#a8a1b5;
+
+  --purple:#7c3aed;
+  --purple2:#9f67ff;
+
+  --green:#4edea3;
+  --orange:#ffb784;
+
+  --radius:18px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow:hidden;
+}
+
+.app{
+  display:flex;
+  height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+  width:280px;
+  background:rgba(22,23,27,.85);
+  border-right:1px solid var(--border);
+  backdrop-filter:blur(20px);
+
+  padding:28px 18px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.logo h1{
+  font-size:42px;
+  font-weight:800;
+  letter-spacing:-2px;
+}
+
+.logo p{
+  margin-top:8px;
+  color:var(--muted);
+}
+
+.menu{
+  margin-top:50px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.menu button{
+  background:none;
+  border:none;
+  color:var(--muted);
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  padding:16px;
+  border-radius:14px;
+
+  cursor:pointer;
+
+  transition:.25s;
+  font-size:16px;
+}
+
+.menu button:hover,
+.menu button.active{
+  background:rgba(255,255,255,.05);
+  color:white;
+}
+
+.start-btn{
+  margin-top:auto;
+  width:100%;
+  border:none;
+  padding:18px;
+  border-radius:18px;
+
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+
+  color:white;
+  font-size:18px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  box-shadow:0 20px 40px rgba(124,58,237,.3);
+}
+
+.bottom-links{
+  margin-top:30px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.bottom-links button{
+  background:none;
+  border:none;
+  color:var(--muted);
+  text-align:left;
+  cursor:pointer;
+  font-size:15px;
+}
+
+/* MAIN */
+
+.main{
+  flex:1;
+  overflow-y:auto;
+  padding:40px;
+  position:relative;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.topbar h2{
+  font-size:32px;
+}
+
+.tabs{
+  display:flex;
+  gap:12px;
+}
+
+.tabs button{
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+
+  color:var(--muted);
+
+  padding:12px 22px;
+  border-radius:999px;
+
+  cursor:pointer;
+  transition:.25s;
+}
+
+.tabs button.active{
+  background:var(--purple);
+  color:white;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+/* TIMER */
+
+.timer-layout{
+  margin-top:40px;
+
+  display:grid;
+  grid-template-columns:280px 1fr 280px;
+  gap:30px;
+  align-items:center;
+}
+
+.card{
+  background:rgba(22,23,27,.75);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+
+  padding:24px;
+
+  backdrop-filter:blur(20px);
+}
+
+.card-title{
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:20px;
+}
+
+.progress-circle{
+  width:420px;
+  height:420px;
+  margin:auto;
+  position:relative;
+}
+
+.progress-circle svg{
+  transform:rotate(-90deg);
+}
+
+.progress-circle .time{
+  position:absolute;
+  inset:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
+
+.time h1{
+  font-size:90px;
+  letter-spacing:-4px;
+}
+
+.time p{
+  color:var(--muted);
+  margin-top:10px;
+  letter-spacing:4px;
+}
+
+.controls{
+  margin-top:40px;
+  display:flex;
+  justify-content:center;
+  gap:24px;
+}
+
+.controls button{
+  width:70px;
+  height:70px;
+
+  border-radius:50%;
+  border:1px solid var(--border);
+
+  background:rgba(255,255,255,.03);
+
+  color:white;
+  cursor:pointer;
+
+  font-size:22px;
+
+  transition:.25s;
+}
+
+.controls button:hover{
+  transform:translateY(-3px);
+}
+
+.controls .play{
+  width:100px;
+  height:100px;
+
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+
+  border:none;
+
+  box-shadow:0 10px 50px rgba(124,58,237,.5);
+}
+
+/* TASKS */
+
+.tasks{
+  margin-top:40px;
+}
+
+.task-input{
+  display:flex;
+  gap:16px;
+  margin-bottom:30px;
+}
+
+.task-input input{
+  flex:1;
+  background:var(--surface);
+  border:1px solid var(--border);
+
+  padding:18px;
+  border-radius:14px;
+
+  color:white;
+  font-size:16px;
+}
+
+.task-input button{
+  border:none;
+  background:var(--purple);
+  color:white;
+
+  padding:0 30px;
+  border-radius:14px;
+
+  font-weight:700;
+  cursor:pointer;
+}
+
+.task{
+  background:rgba(22,23,27,.7);
+
+  border:1px solid var(--border);
+  border-radius:18px;
+
+  padding:24px;
+  margin-bottom:18px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.task-left{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.task-left input{
+  width:22px;
+  height:22px;
+}
+
+.task.completed{
+  opacity:.5;
+  text-decoration:line-through;
+}
+
+.task button{
+  border:none;
+  background:#ff4d4d;
+  color:white;
+
+  padding:10px 16px;
+  border-radius:10px;
+
+  cursor:pointer;
+}
+
+/* STATS */
+
+.stats-grid{
+  margin-top:40px;
+
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+
+.stat{
+  background:rgba(22,23,27,.75);
+  border:1px solid var(--border);
+
+  border-radius:20px;
+  padding:30px;
+}
+
+.stat h3{
+  color:var(--muted);
+  margin-bottom:14px;
+}
+
+.stat h1{
+  font-size:56px;
+}
+
+.bar-chart{
+  margin-top:40px;
+  height:320px;
+
+  display:flex;
+  align-items:flex-end;
+  gap:20px;
+}
+
+.bar{
+  flex:1;
+  background:rgba(255,255,255,.06);
+  border-radius:12px 12px 0 0;
+  position:relative;
+  overflow:hidden;
+}
+
+.bar::after{
+  content:'';
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:100%;
+  height:var(--h);
+
+  background:linear-gradient(
+    180deg,
+    var(--purple2),
+    var(--purple)
+  );
+}
+
+/* QUOTE */
+
+.quote{
+  margin-top:60px;
+  text-align:center;
+  color:var(--muted);
+  font-size:22px;
+  line-height:1.6;
+}
+
+.quote span{
+  display:block;
+  margin-top:20px;
+  font-size:14px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1200px){
+
+  .timer-layout{
+    grid-template-columns:1fr;
+  }
+
+  .progress-circle{
+    width:320px;
+    height:320px;
+  }
+
+  .time h1{
+    font-size:70px;
+  }
+
+}
+
+@media(max-width:900px){
+
+  body{
+    overflow:auto;
+  }
+
+  .app{
+    flex-direction:column;
+    height:auto;
+  }
+
+  .sidebar{
+    width:100%;
+    height:auto;
+  }
+
+  .stats-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div>
+
+      <div class="logo">
+        <h1>DeepWork</h1>
+        <p>Stay Focused</p>
+      </div>
+
+      <div class="menu">
+
+        <button class="nav-btn active" data-page="timerPage">
+          ⏱ Timer
+        </button>
+
+        <button class="nav-btn" data-page="tasksPage">
+          ✅ Tasks
+        </button>
+
+        <button class="nav-btn" data-page="statsPage">
+          📊 Stats
+        </button>
+
+      </div>
+
+    </div>
+
+    <div>
+
+      <button class="start-btn" id="quickStart">
+        Start Session
+      </button>
+
+      <div class="bottom-links">
+        <button>⚙ Settings</button>
+        <button>❔ Support</button>
+      </div>
+
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <!-- TIMER PAGE -->
+
+    <section class="page active" id="timerPage">
+
+      <div class="topbar">
+
+        <h2>Focus Mode</h2>
+
+        <div class="tabs">
+
+          <button class="mode active" data-mode="focus">
+            Focus
+          </button>
+
+          <button class="mode" data-mode="short">
+            Short Break
+          </button>
+
+          <button class="mode" data-mode="long">
+            Long Break
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="timer-layout">
+
+        <div class="card">
+
+          <div class="card-title">
+            CURRENT GOAL
+          </div>
+
+          <h1 id="sessionsCount">
+            0 / 8
+          </h1>
+
+          <p style="margin-top:10px;color:var(--muted)">
+            Focus sessions completed
+          </p>
+
+        </div>
+
+        <div>
+
+          <div class="progress-circle">
+
+            <svg width="420" height="420">
+
+              <circle
+                cx="210"
+                cy="210"
+                r="180"
+                stroke="rgba(255,255,255,.08)"
+                stroke-width="10"
+                fill="none"
+              />
+
+              <circle
+                id="progress"
+                cx="210"
+                cy="210"
+                r="180"
+                stroke="url(#grad)"
+                stroke-width="10"
+                fill="none"
+                stroke-linecap="round"
+                stroke-dasharray="1130"
+                stroke-dashoffset="0"
+              />
+
+              <defs>
+
+                <linearGradient id="grad">
+
+                  <stop offset="0%" stop-color="#9f67ff"/>
+
+                  <stop offset="100%" stop-color="#7c3aed"/>
+
+                </linearGradient>
+
+              </defs>
+
+            </svg>
+
+            <div class="time">
+
+              <h1 id="timer">
+                25:00
+              </h1>
+
+              <p id="modeLabel">
+                DEEP WORK SESSION
+              </p>
+
+            </div>
+
+          </div>
+
+          <div class="controls">
+
+            <button id="resetBtn">
+              ↺
+            </button>
+
+            <button class="play" id="playBtn">
+              ▶
+            </button>
+
+            <button id="skipBtn">
+              ⏭
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-title">
+            TODAY STREAK
+          </div>
+
+          <h1 id="streak">
+            0 Days
+          </h1>
+
+          <p style="margin-top:10px;color:var(--muted)">
+            Stay consistent
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="quote">
+
+        "Deep work is the ability to focus without distraction on a cognitively demanding task."
+
+        <span>
+          Cal Newport — Author of Deep Work
+        </span>
+
+      </div>
+
+    </section>
+
+    <!-- TASKS -->
+
+    <section class="page" id="tasksPage">
+
+      <div class="topbar">
+        <h2>Daily Sprints</h2>
+      </div>
+
+      <div class="tasks">
+
+        <div class="task-input">
+
+          <input
+            type="text"
+            id="taskInput"
+            placeholder="Add new task..."
+          >
+
+          <button id="addTask">
+            Add Task
+          </button>
+
+        </div>
+
+        <div id="taskList"></div>
+
+      </div>
+
+    </section>
+
+    <!-- STATS -->
+
+    <section class="page" id="statsPage">
+
+      <div class="topbar">
+        <h2>Productivity Stats</h2>
+      </div>
+
+      <div class="stats-grid">
+
+        <div class="stat">
+
+          <h3>Total Focus Time</h3>
+
+          <h1 id="focusHours">
+            0h
+          </h1>
+
+        </div>
+
+        <div class="stat">
+
+          <h3>Sessions Completed</h3>
+
+          <h1 id="sessionsDone">
+            0
+          </h1>
+
+        </div>
+
+        <div class="stat">
+
+          <h3>Daily Streak</h3>
+
+          <h1 id="streakStat">
+            0
+          </h1>
+
+        </div>
+
+      </div>
+
+      <div class="bar-chart">
+
+        <div class="bar" style="--h:70%"></div>
+        <div class="bar" style="--h:40%"></div>
+        <div class="bar" style="--h:90%"></div>
+        <div class="bar" style="--h:65%"></div>
+        <div class="bar" style="--h:50%"></div>
+        <div class="bar" style="--h:30%"></div>
+        <div class="bar" style="--h:45%"></div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script>
+
+/* ---------------- STORAGE ---------------- */
+
+const STORAGE_KEY='deepwork-pro';
+
+const state=JSON.parse(
+  localStorage.getItem(STORAGE_KEY)
+) || {
+
+  mode:'focus',
+
+  sessions:0,
+
+  streak:0,
+
+  totalMinutes:0,
+
+  tasks:[]
+
+};
+
+function save(){
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(state)
+  );
+
+}
+
+/* ---------------- TIMER ---------------- */
+
+const DURATIONS={
+
+  focus:25*60,
+
+  short:5*60,
+
+  long:15*60
+
+};
+
+let currentMode=state.mode;
+
+let duration=DURATIONS[currentMode];
+
+let timeLeft=duration;
+
+let timerInterval=null;
+
+let running=false;
+
+const timerEl=document.getElementById('timer');
+
+const progress=document.getElementById('progress');
+
+const circumference=1130;
+
+function updateTimer(){
+
+  const mins=Math.floor(timeLeft/60)
+  .toString()
+  .padStart(2,'0');
+
+  const secs=(timeLeft%60)
+  .toString()
+  .padStart(2,'0');
+
+  timerEl.textContent=`${mins}:${secs}`;
+
+  const offset=
+  circumference-
+  (timeLeft/duration)*circumference;
+
+  progress.style.strokeDashoffset=offset;
+
+}
+
+function startTimer(){
+
+  if(running)return;
+
+  running=true;
+
+  document.getElementById('playBtn').textContent='❚❚';
+
+  timerInterval=setInterval(()=>{
+
+    timeLeft--;
+
+    updateTimer();
+
+    if(timeLeft<=0){
+
+      clearInterval(timerInterval);
+
+      running=false;
+
+      document.getElementById('playBtn').textContent='▶';
+
+      completeSession();
+
+    }
+
+  },1000);
+
+}
+
+function pauseTimer(){
+
+  running=false;
+
+  clearInterval(timerInterval);
+
+  document.getElementById('playBtn').textContent='▶';
+
+}
+
+function resetTimer(){
+
+  pauseTimer();
+
+  timeLeft=duration;
+
+  updateTimer();
+
+}
+
+function completeSession(){
+
+  if(currentMode==='focus'){
+
+    state.sessions++;
+
+    state.totalMinutes+=25;
+
+    state.streak++;
+
+  }
+
+  save();
+
+  renderStats();
+
+  alert('Session Completed 🎉');
+
+  resetTimer();
+
+}
+
+document.getElementById('playBtn')
+.onclick=()=>{
+
+  running
+  ?pauseTimer()
+  :startTimer();
+
+};
+
+document.getElementById('resetBtn')
+.onclick=resetTimer;
+
+document.getElementById('skipBtn')
+.onclick=()=>{
+
+  pauseTimer();
+
+  timeLeft=0;
+
+  completeSession();
+
+};
+
+document.querySelectorAll('.mode')
+.forEach(btn=>{
+
+  btn.onclick=()=>{
+
+    document.querySelectorAll('.mode')
+    .forEach(b=>b.classList.remove('active'));
+
+    btn.classList.add('active');
+
+    currentMode=btn.dataset.mode;
+
+    state.mode=currentMode;
+
+    save();
+
+    duration=DURATIONS[currentMode];
+
+    timeLeft=duration;
+
+    updateTimer();
+
+  };
+
+});
+
+/* ---------------- TASKS ---------------- */
+
+function renderTasks(){
+
+  const taskList=
+  document.getElementById('taskList');
+
+  taskList.innerHTML='';
+
+  state.tasks.forEach((task,index)=>{
+
+    const div=document.createElement('div');
+
+    div.className=
+    `task ${task.completed?'completed':''}`;
+
+    div.innerHTML=`
+
+      <div class="task-left">
+
+        <input
+          type="checkbox"
+          ${task.completed?'checked':''}
+        >
+
+        <div>
+
+          <h3>${task.text}</h3>
+
+          <p style="color:var(--muted);margin-top:6px">
+            ${task.pomos} Pomodoros
+          </p>
+
+        </div>
+
+      </div>
+
+      <button>
+        Delete
+      </button>
+
+    `;
+
+    div.querySelector('input')
+    .onchange=()=>{
+
+      task.completed=!task.completed;
+
+      save();
+
+      renderTasks();
+
+    };
+
+    div.querySelector('button')
+    .onclick=()=>{
+
+      state.tasks.splice(index,1);
+
+      save();
+
+      renderTasks();
+
+    };
+
+    taskList.appendChild(div);
+
+  });
+
+}
+
+document.getElementById('addTask')
+.onclick=()=>{
+
+  const input=
+  document.getElementById('taskInput');
+
+  const value=input.value.trim();
+
+  if(!value)return;
+
+  state.tasks.push({
+
+    text:value,
+
+    completed:false,
+
+    pomos:1
+
+  });
+
+  input.value='';
+
+  save();
+
+  renderTasks();
+
+};
+
+/* ---------------- STATS ---------------- */
+
+function renderStats(){
+
+  document.getElementById('sessionsCount')
+  .textContent=
+  `${state.sessions} / 8`;
+
+  document.getElementById('sessionsDone')
+  .textContent=
+  state.sessions;
+
+  document.getElementById('focusHours')
+  .textContent=
+  `${(state.totalMinutes/60).toFixed(1)}h`;
+
+  document.getElementById('streak')
+  .textContent=
+  `${state.streak} Days`;
+
+  document.getElementById('streakStat')
+  .textContent=
+  state.streak;
+
+}
+
+/* ---------------- NAVIGATION ---------------- */
+
+document.querySelectorAll('.nav-btn')
+.forEach(btn=>{
+
+  btn.onclick=()=>{
+
+    document.querySelectorAll('.nav-btn')
+    .forEach(b=>b.classList.remove('active'));
+
+    btn.classList.add('active');
+
+    document.querySelectorAll('.page')
+    .forEach(p=>p.classList.remove('active'));
+
+    document.getElementById(
+      btn.dataset.page
+    ).classList.add('active');
+
+  };
+
+});
+
+document.getElementById('quickStart')
+.onclick=startTimer;
+
+/* ---------------- SHORTCUTS ---------------- */
+
+document.addEventListener('keydown',e=>{
+
+  if(e.code==='Space'){
+
+    e.preventDefault();
+
+    running
+    ?pauseTimer()
+    :startTimer();
+
+  }
+
+  if(e.key.toLowerCase()==='r'){
+
+    resetTimer();
+
+  }
+
+});
+
+/* ---------------- INIT ---------------- */
+
+updateTimer();
+
+renderTasks();
+
+renderStats();
+
+</script>
+
+</body>
+</html>
